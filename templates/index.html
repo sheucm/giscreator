@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Gis Creator</title>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/v2.2.2/mapbox.css" type="text/css" media="all" />
+        <script src="//code.jquery.com/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="https://api.mapbox.com/mapbox.js/v2.2.2/mapbox.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <body>
+        <div id="map" class="map_style">
+        </div>
+        <input type="text" name="item" id="item" value="" />
+        <div>
+            Latitude: 
+            <span class="lat_value"></span>
+            <br>
+            Longitude: 
+            <span class="long_value"></span>
+        </div>
+        <button id="get_gis" type="submit">取得位置</button>
+        <button id="gis_submit" type="submit">上傳</button>
+    </body>
+    <script type="text/javascript" charset="utf-8">
+        var map = L.map('map').setView([51.505, -0.09], 9);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZnJhbmt5YW5nMjAxNSIsImEiOiJjaWZxN29mc2k2ejZrczNrcWJ4bWdxYXo5In0.ichUKcRuonpJ6hX6bzUGIw', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'frankyang2015.cifq7oe8dib8tr7lxmnfx511f'
+        }).addTo(map);
+
+        var lat_value = 0;
+        var long_value = 0;
+
+        $('#get_gis').click(function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+            function showPosition(position){
+                map.setView([position.coords.latitude, position.coords.longitude], 9);
+                $('.lat_value').html(position.coords.latitude);
+                $('.long_value').html(position.coords.longitude);
+                lat_value = position.coords.latitude;
+                long_value = position.coords.longitude;
+            }
+        });
+
+        $('#gis_submit').click(function() {
+            var submit_data = {"item": $('#item').val(), "lat": lat_value, "lon": long_value};
+            $.ajax({
+                type: "POST",
+                url: '/gis/',
+                data: submit_data,
+            })
+            .done(function() {
+                alert("成功");
+            })
+            .fail(function() {
+                alert("失敗");
+            });
+        });
+    </script>
+    <style type="text/css" media="screen">
+        #map {width: 100%; height: 400px;}
+    </style>
+</html>
