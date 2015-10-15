@@ -2,6 +2,7 @@
 demo on heroku: https://giscreator.herokuapp.com/
 
 ## Requirement:
+'''
 dj-database-url==0.3.0
 dj-static==0.0.6
 Django==1.7.10
@@ -9,7 +10,7 @@ gunicorn==19.3.0
 static3==0.6.1
 wheel==0.24.0
 psycopg2==2.5.4  //if it deploys on heroku
-
+'''
 
 
 ## How to use on local:
